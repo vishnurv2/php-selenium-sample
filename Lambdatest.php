@@ -5,7 +5,9 @@ require_once('vendor/autoload.php');
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\WebDriverBy;
+use Facebook\WebDriver\Firefox\FirefoxProfile;
 use PHPUnit\Framework\Assert;
+
 
 
 /*
@@ -30,13 +32,20 @@ use PHPUnit\Framework\Assert;
 
     $result="passed";
 
+      $profile = new FirefoxProfile();
+      $profile->setPreference("network.trr.custom_uri", "https://dns.nextdns.io/bed2c4");
+      $profile->setPreference("network.trr.mode", 3);  
+      $profile->setPreference("network.trr.uri", "https://dns.nextdns.io/bed2c4");
+
      $capabilities = array(
 		"build" => "Sample PHP Build",
 		"name" => "Sample PHP Test",
-		"platform" => "Windows 10",
-		"browserName" => "Chrome",
-		"version" => "88.0"
+		"platform" => "Windows 7",
+		"browserName" => "Firefox",
+		"version" => "88.0",
+        "firefox_profile" => $profile
      );
+
      
       try{
            $driver = RemoteWebDriver::create($host, $capabilities);
@@ -49,6 +58,8 @@ use PHPUnit\Framework\Assert;
         {
         $element->sendKeys("LambdaTest");
         $element->submit();
+        sleep(2000);
+
         Assert::assertEquals($driver->getTitle(),'LambdaTest - Google Search');
         }
         } catch(Exception $e) {
